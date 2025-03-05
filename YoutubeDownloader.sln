@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YoutubeDownloader", "Youtub
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaylistDownloader", "PlaylistDownloader\PlaylistDownloader.csproj", "{0042F3A9-7872-454D-9DDC-A8C15ACF4088}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetadataGenerator", "MetadataGenerator\MetadataGenerator.csproj", "{732BAA32-7B51-47F7-9FF9-4409A2BBE7FF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YoutubeMetadataGenerator", "YoutubeMetadataGenerator\YoutubeMetadataGenerator.csproj", "{732BAA32-7B51-47F7-9FF9-4409A2BBE7FF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

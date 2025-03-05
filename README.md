@@ -19,10 +19,6 @@ Files are first downloaded as webm's directly from YouTube, then converted into 
 
 A JSON file containing metadata is also written to the drive.
 
-**TODO**:
-
-- Auto Metadata entry via ffmpeg -- 1/2 Done
-
 
 ## Libraries used
 

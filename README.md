@@ -19,6 +19,13 @@ Files are first downloaded as webm's directly from YouTube, then converted into 
 
 A JSON file containing metadata is also written to the drive.
 
+## How do I build the source code?
+
+1. Clone the master (or dev if u want the newest maybe still buggy features) branch of this repo
+2. With the newest version of dotnet installed, go to the directory where you saved the cloned .sln file in a terminal of your choice
+3. type 'dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true -p:EnableTrim=true -o ./Release' then press enter -- replace win-x64 with linux-x64 for linux.
+4. your exe's or binaries will be in ./Release 
+
 **TODO**:
 
 - Auto Metadata entry via ffmpeg -- 1/2 Done

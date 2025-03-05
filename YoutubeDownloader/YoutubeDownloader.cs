@@ -150,6 +150,8 @@ internal class YoutubeDownloader
             else
             {
                 Console.WriteLine("Conversion completed successfully!");
+                
+                var res = await Cli.Wrap("MetadataGenerator").WithArguments($"\"{newFileName}\"").ExecuteAsync();
             }
 
             File.Move(audioFileName, Path.Combine(webmPath, $"{fname}.webm"));

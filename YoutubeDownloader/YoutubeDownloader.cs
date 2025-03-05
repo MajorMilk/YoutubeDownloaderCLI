@@ -150,7 +150,6 @@ internal class YoutubeDownloader
             else
             {
                 Console.WriteLine("Conversion completed successfully!");
-
                 Console.WriteLine("Adding metadata to file...");
  
                 var res = await Cli.Wrap("YoutubeMetadataGenerator").WithArguments($"\"{newFileName}\"").WithStandardOutputPipe(PipeTarget.ToDelegate(Console.WriteLine)).ExecuteAsync();

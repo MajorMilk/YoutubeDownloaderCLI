@@ -11,7 +11,7 @@ internal class YoutubeDownloader
     public static async Task Main(string[] args)
     {
         string link;
-        try
+        try // bad way to handle arguments, but whatever. If someone wanted to implement CommandLineParser, I would not be opposed.
         {
             link = args[0];
 
@@ -19,7 +19,7 @@ internal class YoutubeDownloader
             {
                 _ = args[1];
                 _videoMode = true;
-            }
+            } 
             catch (IndexOutOfRangeException)
             { }
         }
@@ -31,10 +31,8 @@ internal class YoutubeDownloader
         if (link.Contains("youtube.com/watch?v="))
         {
             var v = await GetVideoAsync(link);
-            await DownloadAudioAsync(link, v);
+            await DownloadAsync(link, v);
         }
-        
-        
 
     }
 
@@ -49,7 +47,7 @@ internal class YoutubeDownloader
         return string.Join("_", filename.Split(Path.GetInvalidFileNameChars()));    
     }
 
-    private static async Task DownloadAudioAsync(string link, Video video)
+    private static async Task DownloadAsync(string link, Video video)
 {
     Console.WriteLine($"Downloading {video.Title}");
     var streamManifest = await Client.Videos.Streams.GetManifestAsync(link);
@@ -75,7 +73,7 @@ internal class YoutubeDownloader
     var audioFileName = Path.Combine(downloadsPath, $"{fname}.{audioStreamInfo.Container}");
     await Client.Videos.Streams.DownloadAsync(audioStreamInfo, audioFileName);
 
-    if (_videoMode)
+    if (_videoMode) // video files from youtube do not come muxed, so it needs to be downloaded separately
     {
         var videoStreamInfo = streamManifest.GetVideoOnlyStreams().GetWithHighestBitrate();
         var videoPath = Path.Combine(downloadsPath, "Videos");
@@ -120,7 +118,7 @@ internal class YoutubeDownloader
         File.Delete(audioFileName);
         Console.WriteLine("All Done");
     }
-    else
+    else // for audio only conversion
     {
         Console.WriteLine("Download Complete, beginning conversion...");
 
@@ -133,13 +131,13 @@ internal class YoutubeDownloader
         }
 
         // Print the exact command for debugging
-        string ffmpegCommand = $"ffmpeg -i \"{audioFileName}\" -vn -c:a aac -b:a 320k -y \"{newFileName}\"";
+        string ffmpegCommand = $"ffmpeg -i \"{audioFileName}\" -vn -c:a aac -b:a 192k -y \"{newFileName}\""; // ffprobe says the bitrate is closer to 130kbps, that's why I lowered it from 320'
         Console.WriteLine($"Executing: {ffmpegCommand}");
 
         try
         {
             var result = await Cli.Wrap("ffmpeg")
-                .WithArguments($"-i \"{audioFileName}\" -vn -c:a aac -b:a 320k -y \"{newFileName}\"")
+                .WithArguments(ffmpegCommand) 
                 .WithValidation(CommandResultValidation.None) // Disable validation to capture errors
                 .ExecuteAsync();
 

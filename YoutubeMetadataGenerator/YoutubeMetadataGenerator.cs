@@ -18,9 +18,6 @@ internal class YoutubeMetadataGenerator
             // Get the folder containing the file
             string parentOfCurrentFolder = Path.GetDirectoryName(file);
 
-            // Get the parent directory of the folder containing the file
-            //string parentOfCurrentFolder = Directory.GetParent(currentFolder)?.FullName;
-
             var jsonsFolder = Path.Combine(parentOfCurrentFolder, "jsons");
 
             var jsonFileName = filename.Replace(".m4a", ".json");
@@ -31,7 +28,12 @@ internal class YoutubeMetadataGenerator
 
 
             string Title = video.Title;
-            Author Author = video.Author;
+
+            //This is to fix ' - Topic' being added to artist metadata.
+            //"topic" channels are created automatically when music publisher uploads your music.
+            //This is the highest quality recording you can find on YouTube, since it's generated using the original files. 
+            string Author = video.Author.ChannelTitle.Replace(" - Topic", "");
+            
             string artUrl = video.Thumbnails[^1].Url;
 
             string savePath = Path.Combine(jsonsFolder, $"thumbnails");
@@ -65,7 +67,7 @@ internal class YoutubeMetadataGenerator
             tempFile = Path.Combine(downloadsDir, tempFile);
             //ffmpeg -i input.m4a -i cover.jpg -map 0 -map 1 -c copy -metadata title="Song Title" -metadata artist="Artist Name" -disposition:v attached_pic output.m4a
             string command =
-                $"-i \"{file}\" -i \"{savePath}\" -map 0 -map 1 -c copy -metadata title=\"{Title}\" -metadata artist=\"{Author.ChannelTitle}\" -disposition:v attached_pic \"{tempFile}\"";
+                $"-i \"{file}\" -i \"{savePath}\" -map 0 -map 1 -c copy -metadata title=\"{Title}\" -metadata artist=\"{Author}\" -disposition:v attached_pic \"{tempFile}\"";
 
             Console.WriteLine("Executing: " + command);
 
@@ -122,8 +124,8 @@ internal class YoutubeMetadataGenerator
                 var jsonFileName = filename.Replace(".m4a", ".json");
                 var json = File.ReadAllText(Path.Combine(jsonDirPath, jsonFileName));
                 var video = JsonConvert.DeserializeObject<Video>(json);
-                string Title = video.Title;
-                Author Author = video.Author;
+                string title = video.Title;
+                string author = video.Author.ChannelTitle.Replace(" - Topic", "");
                 string artUrl = video.Thumbnails[^1].Url;
                 string savePath = Path.Combine(jsonDirPath, "thumbnails");
                 savePath = Path.Combine(savePath, $"{Path.GetFileNameWithoutExtension(filePath)}.jpg");
@@ -150,7 +152,7 @@ internal class YoutubeMetadataGenerator
                 tempFile = Path.Combine(downloadsDir, tempFile);
                 //ffmpeg -i input.m4a -i cover.jpg -map 0 -map 1 -c copy -metadata title="Song Title" -metadata artist="Artist Name" -disposition:v attached_pic output.m4a
                 string command =
-                    $"-i \"{filePath}\" -i \"{savePath}\" -map 0 -map 1 -c copy -metadata title=\"{Title}\" -metadata artist=\"{Author.ChannelTitle}\" -disposition:v attached_pic \"{tempFile}\"";
+                    $"-i \"{filePath}\" -i \"{savePath}\" -map 0 -map 1 -c copy -metadata title=\"{title}\" -metadata artist=\"{author}\" -disposition:v attached_pic \"{tempFile}\"";
 
                 Console.WriteLine("Executing: ffmpeg " + command);
 

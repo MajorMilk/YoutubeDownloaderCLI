@@ -131,7 +131,7 @@ internal class YoutubeDownloader
         }
 
         // Print the exact command for debugging
-        string ffmpegCommand = $"ffmpeg -i \"{audioFileName}\" -vn -c:a aac -b:a 192k -y \"{newFileName}\""; // ffprobe says the bitrate is closer to 130kbps, that's why I lowered it from 320'
+        string ffmpegCommand = $"-i \"{audioFileName}\" -vn -c:a aac -b:a 192k -y \"{newFileName}\""; // ffprobe says the bitrate is closer to 130kbps, that's why I lowered it from 320'
         Console.WriteLine($"Executing: {ffmpegCommand}");
 
         try
@@ -150,7 +150,10 @@ internal class YoutubeDownloader
                 Console.WriteLine("Conversion completed successfully!");
                 Console.WriteLine("Adding metadata to file...");
  
-                var res = await Cli.Wrap("YoutubeMetadataGenerator").WithArguments($"\"{newFileName}\"").WithStandardOutputPipe(PipeTarget.ToDelegate(Console.WriteLine)).ExecuteAsync();
+                var res = await Cli.Wrap("YoutubeMetadataGenerator").WithArguments($"\"{newFileName}\"")
+                    .WithStandardOutputPipe(PipeTarget.ToDelegate(Console.WriteLine))
+                    .WithStandardErrorPipe(PipeTarget.ToDelegate(Console.Error.WriteLine))
+                    .ExecuteAsync();
             }
 
             File.Move(audioFileName, Path.Combine(webmPath, $"{fname}.webm"));

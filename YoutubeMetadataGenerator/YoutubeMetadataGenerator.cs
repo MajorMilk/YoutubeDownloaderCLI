@@ -40,8 +40,15 @@ internal class YoutubeMetadataGenerator
 
             if (!Directory.Exists(savePath))
             {
+                Console.WriteLine($"Thumbnails folder does not exist. Attempting to create: {savePath}");
                 Directory.CreateDirectory(savePath);
+                Console.WriteLine($"Directory created? {Directory.Exists(savePath)}");
             }
+            else
+            {
+                Console.WriteLine($"Thumbnails folder already exists: {savePath}");
+            }
+
 
             savePath = Path.Combine(savePath, $"{Path.GetFileNameWithoutExtension(file)}.jpg");
 

@@ -19,6 +19,10 @@ Files are first downloaded as webm's directly from YouTube, then converted into 
 
 A JSON file containing metadata is also written to the drive.
 
+If you're on linux, you might have to manually create the thumbnails directory under the json dir, dont know why, but I did.
+
+you should also surround the link with quotes if youre on linux because of bash reasons.
+
 ## How do I build the source code?
 
 1. Clone the master (or dev if u want the newest maybe still buggy features) branch of this repo

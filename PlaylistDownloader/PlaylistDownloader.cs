@@ -11,6 +11,14 @@ internal class PlaylistDownloader
         try
         {
             url = args[0];
+            if (url.Contains("playlist?list="))
+            {
+                url = url.Split("playlist?list=")[^1];
+            }
+            else
+            { // On linux, Im running into issues with bash recognizing & I think.
+                Console.WriteLine("You need to provide the full link to a playlist, preferably in quotes.");
+            }
         }
         catch (IndexOutOfRangeException)
         {

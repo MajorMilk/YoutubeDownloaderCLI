@@ -31,7 +31,12 @@ internal class YoutubeMetadataGenerator
 
 
             string Title = video.Title;
-            Author Author = video.Author;
+
+            //This is to fix ' - Topic' being added to artist metadata.
+            //"topic" channels are created automatically when music publisher uploads your music.
+            //This is the highest quality recording you can find on YouTube, since it's generated using the original files. 
+            string Author = video.Author.ChannelTitle.Replace(" - Topic", "");
+            
             string artUrl = video.Thumbnails[^1].Url;
 
             string savePath = Path.Combine(jsonsFolder, $"thumbnails");
@@ -65,7 +70,7 @@ internal class YoutubeMetadataGenerator
             tempFile = Path.Combine(downloadsDir, tempFile);
             //ffmpeg -i input.m4a -i cover.jpg -map 0 -map 1 -c copy -metadata title="Song Title" -metadata artist="Artist Name" -disposition:v attached_pic output.m4a
             string command =
-                $"-i \"{file}\" -i \"{savePath}\" -map 0 -map 1 -c copy -metadata title=\"{Title}\" -metadata artist=\"{Author.ChannelTitle}\" -disposition:v attached_pic \"{tempFile}\"";
+                $"-i \"{file}\" -i \"{savePath}\" -map 0 -map 1 -c copy -metadata title=\"{Title}\" -metadata artist=\"{Author}\" -disposition:v attached_pic \"{tempFile}\"";
 
             Console.WriteLine("Executing: " + command);
 

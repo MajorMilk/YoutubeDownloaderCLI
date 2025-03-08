@@ -54,7 +54,7 @@ internal class YoutubeDownloader
     Console.WriteLine($"Downloading {video.Title}");
     var streamManifest = await Client.Videos.Streams.GetManifestAsync(link);
     var audioStreamInfo = streamManifest.GetAudioOnlyStreams().GetWithHighestBitrate();
-
+    
     string fname = ReplaceInvalidChars(video.Title);
     string json = JsonConvert.SerializeObject(video, Formatting.Indented);
     var downloadsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");

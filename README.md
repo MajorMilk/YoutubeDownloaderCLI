@@ -35,3 +35,18 @@ you should also surround the link with quotes if youre on linux because of bash 
 - Newtonsoft.JSON
 - Cli.Wrap
 - YoutubeExplode
+
+
+# Community feedback
+
+I am very interested to hear your feedback.
+
+Particularly in regards to file format, whether or not the webm's should be deleted upon conversion, if jsons should be deleted after metadata entry, if you'd prefer converted files go to your music folder, etc.
+
+Any feedback is welcome.
+
+Any pull requests are welcome.
+
+Also, I've experimented with Genius' API, and it very often returns bad data. If you know of an API I could use to get better metadata based on title and author, that'd be greatly appreciated.
+
+Enjoy.

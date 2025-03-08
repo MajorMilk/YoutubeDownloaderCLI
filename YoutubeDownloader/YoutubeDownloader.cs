@@ -131,7 +131,7 @@ internal class YoutubeDownloader
         }
 
         // Print the exact command for debugging
-        string ffmpegCommand = $"ffmpeg -i \"{audioFileName}\" -vn -c:a aac -b:a 192k -y \"{newFileName}\""; // ffprobe says the bitrate is closer to 130kbps, that's why I lowered it from 320'
+        string ffmpegCommand = $"-i \"{audioFileName}\" -vn -c:a aac -b:a 192k -y \"{newFileName}\""; // ffprobe says the bitrate is closer to 130kbps, that's why I lowered it from 320'
         Console.WriteLine($"Executing: {ffmpegCommand}");
 
         try

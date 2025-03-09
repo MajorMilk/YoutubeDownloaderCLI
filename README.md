@@ -20,6 +20,12 @@ A command-line tool for downloading YouTube videos and playlists. This tool serv
 
 You can learn how to do this [here](https://stackoverflow.com/questions/44272416/how-to-add-a-folder-to-path-environment-variable-in-windows-10-with-screensho) on Windows and [here](https://linuxize.com/post/how-to-add-directory-to-path-in-linux/) on Linux.
 
+## How do I use the new Spotify Metadata features?
+1. Clone the dev branch of this repo and build the code 
+2. Create an app on the spotify developers portal [here](https://developer.spotify.com)
+3. Run the Spotify binary at least once, it will generate a json file in the same dir as the binary with places for you to put your client id and client secret
+4. After placing your client id and secret into that json, simply run the exe, and the program will try and scrape metadata for all your m4a files
+
 ## Usage
 
 To download a single YouTube video:

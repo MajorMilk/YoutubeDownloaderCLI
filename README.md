@@ -23,6 +23,11 @@ If you're on linux, you might have to manually create the thumbnails directory u
 
 you should also surround the link with quotes if youre on linux because of bash reasons.
 
+## How do I use the new Spotify Metadata features?
+1. Create an app on the spotify developers portal [here](https://developer.spotify.com)
+2. Run the Spotify binary at least once, it will generate a json file in the same dir as the binary with places for you to put your client id and client secret
+3. After placing your client id and secret into that json, simply run the exe, and the program will try and scrape metadata for all your m4a files
+
 ## How do I build the source code?
 
 1. Clone the master (or dev if u want the newest maybe still buggy features) branch of this repo

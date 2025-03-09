@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaylistDownloader", "Playl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YoutubeMetadataGenerator", "YoutubeMetadataGenerator\YoutubeMetadataGenerator.csproj", "{732BAA32-7B51-47F7-9FF9-4409A2BBE7FF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spotify", "Spotify\Spotify.csproj", "{7003847D-2230-42D4-BC2C-E025E7E7F1C0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{732BAA32-7B51-47F7-9FF9-4409A2BBE7FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{732BAA32-7B51-47F7-9FF9-4409A2BBE7FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{732BAA32-7B51-47F7-9FF9-4409A2BBE7FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7003847D-2230-42D4-BC2C-E025E7E7F1C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7003847D-2230-42D4-BC2C-E025E7E7F1C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7003847D-2230-42D4-BC2C-E025E7E7F1C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7003847D-2230-42D4-BC2C-E025E7E7F1C0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

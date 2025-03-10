@@ -13,4 +13,8 @@
       <PackageReference Include="YoutubeExplode" Version="6.5.3" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\SpotifyMetadataGrabber\SpotifyMetadataGrabber.csproj" />
+    </ItemGroup>
+
 </Project>

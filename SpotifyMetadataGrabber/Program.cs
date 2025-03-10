@@ -15,6 +15,79 @@ class Program
         downloadsPath = Path.Combine(downloadsPath, "YoutubeDownloads");
         
         string jsonDirPath = Path.Combine(downloadsPath, "jsons");
+
+        try
+        {
+            string file = args[0];
+            if (!File.Exists(file))
+            {
+                Console.WriteLine($"File not found: {file}");
+                Environment.Exit(1);
+            }
+            
+            string jsonFileName = Path.GetFileName(file).Replace(".m4a", ".json");
+            string jsonPath = Path.Combine(jsonDirPath, jsonFileName);
+            SongMetadata song;
+            
+            string title;
+            string author;
+            
+            if (!File.Exists(jsonPath))
+            {
+                Console.WriteLine($"No JSON file found for {jsonPath}. Searching for song metadata base don incomplete info...");
+                song = await Spotify.Instance.SearchSong(Path.GetFileNameWithoutExtension(file), "Unknown");
+            }
+            else
+            {
+                string json = File.ReadAllText(jsonPath);
+                Video v = JsonConvert.DeserializeObject<Video>(json);
+                title = v.Title;
+                author = v.Author.ChannelTitle.Replace(" - Topic", "");
+                song = await Spotify.Instance.SearchSong(title, author);
+            }
+            
+
+            if (song.Album != "Unknown Album")
+            {
+                string filenameWOE = Path.GetFileNameWithoutExtension(file);
+                string tempFileName = file.Replace(filenameWOE, $"{filenameWOE}temp");
+                
+                string imageDir = Path.Combine(jsonDirPath, "thumbnails");
+                string imagePath = Path.Combine(imageDir, $"{filenameWOE}.jpg");
+
+                
+                string command =
+                    $"-i \"{file}\" -i \"{imagePath}\" -map 0:a -map 1:v -c:a copy -c:v copy -disposition:v:0 attached_pic -metadata title=\"{song.Title}\" " +
+                    $"-metadata artist=\"{song.Artist}\" " +
+                    $"-metadata album=\"{song.Album}\" " +
+                    $"-metadata track=\"{song.TrackNumber}\" " +
+                    $"-metadata disc=\"{song.DiscNumber}\" " +
+                    $"-metadata year=\"{song.Year}\" " +
+                    $"-metadata isrc=\"{song.ISRC}\" " +
+                    $"-metadata comment=\"Downloaded from Youtube using YoutubeDownloaderCLI - Metadata from Spotify\" \"{tempFileName}\"";  // Output file in .m4a format
+                
+                var result = await Cli.Wrap("ffmpeg").WithArguments(command).WithStandardErrorPipe(PipeTarget.ToDelegate(Console.Error.WriteLine)).ExecuteAsync();
+                
+                if (result.ExitCode != 0)
+                {
+                    Console.WriteLine($"FFmpeg failed with exit code {result.ExitCode}");
+                }
+                else
+                {
+                    File.Delete(file);
+                    File.Move(tempFileName, file);
+                    Console.WriteLine("Metadata updated successfully!");
+                    
+                }
+
+            } 
+            return;
+        }
+        catch (IndexOutOfRangeException)
+        {
+            Console.WriteLine("Are you sure you want to apply this to all downloaded files? (y/n)");
+            if (Console.ReadLine() != "y") return;
+        }
         
         var files = Directory.GetFiles(downloadsPath);
         foreach (var file in files)
@@ -44,28 +117,14 @@ class Program
             if (song.Album != "Unknown Album")
             {
                 string filenameWOE = Path.GetFileNameWithoutExtension(file);
-                string tempFileName = file.Replace(filenameWOE, filenameWOE + "temp");
+                string tempFileName = file.Replace(filenameWOE, $"{filenameWOE}temp");
                 
                 string imageDir = Path.Combine(jsonDirPath, "thumbnails");
                 string imagePath = Path.Combine(imageDir, $"{filenameWOE}.jpg");
 
                 
-                string command = $"-i \"{file}\" " +  // Input audio file
-                                 $"-i \"{imagePath}\" " +  // Input image file
-                                 "-map 0:a " +  // Map the audio stream from the first input
-                                 "-map 1:v " +  // Map the image stream from the second input
-                                 "-c:a copy " +  // Copy the audio stream without re-encoding
-                                 "-c:v copy " +  // Copy the image stream without re-encoding
-                                 "-disposition:v:0 attached_pic " +  // Mark the image as album art
-                                 $"-metadata title=\"{song.Title}\" " +  // Metadata for the output file
-                                 $"-metadata artist=\"{song.Artist}\" " +  // Metadata for the output file
-                                 $"-metadata album=\"{song.Album}\" " +  // Metadata for the output file
-                                 $"-metadata track=\"{song.TrackNumber}\" " +  // Metadata for the output file
-                                 $"-metadata disc=\"{song.DiscNumber}\" " +  // Metadata for the output file
-                                 $"-metadata year=\"{song.Year}\" " +  // Metadata for the output file
-                                 $"-metadata isrc=\"{song.ISRC}\" " +  // Metadata for the output file
-                                 $"-metadata comment=\"Downloaded from Youtube using YoutubeDownloaderCLI - Metadata from Spotify\" " +  // Metadata for the output file
-                                 $"\"{tempFileName}\"";  // Output file in .m4a format
+                string command =
+                    $"-i \"{file}\" -i \"{imagePath}\" -map 0:a -map 1:v -c:a copy -c:v copy -disposition:v:0 attached_pic -metadata title=\"{song.Title}\" -metadata artist=\"{song.Artist}\" -metadata album=\"{song.Album}\" -metadata track=\"{song.TrackNumber}\" -metadata disc=\"{song.DiscNumber}\" -metadata year=\"{song.Year}\" -metadata isrc=\"{song.ISRC}\" -metadata comment=\"Downloaded from Youtube using YoutubeDownloaderCLI - Metadata from Spotify\" \"{tempFileName}\"";  // Output file in .m4a format
                 
                 var result = await Cli.Wrap("ffmpeg").WithArguments(command).WithStandardErrorPipe(PipeTarget.ToDelegate(Console.Error.WriteLine)).ExecuteAsync();
                 
@@ -104,8 +163,10 @@ class Spotify
 
     private Spotify()
     {
-        string binaryDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        string configPath = Path.Combine(binaryDir, "SpotifyAPICreds.json");
+        string downloadsPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        downloadsPath = Path.Combine(downloadsPath, "Downloads");
+        downloadsPath = Path.Combine(downloadsPath, "YoutubeDownloads");
+        string configPath = Path.Combine(Path.Combine(Path.Combine(downloadsPath, "jsons")), "SpotifyAPICreds.json");
 
         if (!File.Exists(configPath))
         {

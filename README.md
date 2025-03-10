@@ -1,42 +1,91 @@
-﻿# YoutubeDownloaderCLI
+# YoutubeDownloaderCLI
 
-Designed as a CLI alternative for my other project 'YouTube -To-MPX'
+A command-line tool for downloading YouTube videos and playlists. This tool serves as a CLI alternative to my other project, **YouTube-To-MPX**.
 
-## Installation Steps
+## Installation
 
-1. Download FFMPEG and add it to your PATH variable
-2. Build the source code with the latest version of dotnet
-3. add the dir containing resulting exe files to your PATH variable
-4. Done, simply type **"YoutubeDownloader {YouTube link}"** or **"PlaylistDownloader {playlist link}"**
+### Prerequisites
 
-Complete MP4's can be downloaded by adding any additional argument to the YoutubeDownloader
+1. **FFmpeg**: Download and install FFmpeg, then add it to your system's PATH
+2. **.NET SDK**: Install the latest version of .NET SDK.
 
-Example: YoutubeDownloader {link} **v**
+### Steps
 
-All files are downloaded to your downloads folder in a folder called 'YoutubeDownloads'
+1. Clone this repository.
+2. Build the source code using the latest .NET version.
+3. Add the directory containing the compiled executable files to your system's PATH.
+4. Done! You can now use the tool from the command line.
 
-Files are first downloaded as webm's directly from YouTube, then converted into m4a format.
+## Adding things to your PATH variable
 
-A JSON file containing metadata is also written to the drive.
-
-If you're on linux, you might have to manually create the thumbnails directory under the json dir, dont know why, but I did.
-
-you should also surround the link with quotes if youre on linux because of bash reasons.
+You can learn how to do this [here](https://stackoverflow.com/questions/44272416/how-to-add-a-folder-to-path-environment-variable-in-windows-10-with-screensho) on Windows and [here](https://linuxize.com/post/how-to-add-directory-to-path-in-linux/) on Linux.
 
 ## How do I use the new Spotify Metadata features?
-1. Create an app on the spotify developers portal [here](https://developer.spotify.com)
-2. Run the Spotify binary at least once, it will generate a json file in the same dir as the binary with places for you to put your client id and client secret
-3. After placing your client id and secret into that json, simply run the exe, and the program will try and scrape metadata for all your m4a files
+1. Clone the dev branch of this repo and build the code 
+2. Create an app on the spotify developers portal [here](https://developer.spotify.com)
+3. Run the Spotify binary at least once, it will generate a json file in the same dir as the binary with places for you to put your client id and client secret
+4. After placing your client id and secret into that json, simply run the exe, and the program will try and scrape metadata for all your m4a files
 
-## How do I build the source code?
+## Usage
 
-1. Clone the master (or dev if u want the newest maybe still buggy features) branch of this repo
-2. With the newest version of dotnet installed, go to the directory where you saved the cloned .sln file in a terminal of your choice
-3. type 'dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true -p:EnableTrim=true -o ./Release' then press enter -- replace win-x64 with linux-x64 for linux.
-4. your exe's or binaries will be in ./Release
+To download a single YouTube video:
 
-## Libraries used
+```sh
+YoutubeDownloader "<YouTube Video URL>"
+```
 
-- Newtonsoft.JSON
-- Cli.Wrap
-- YoutubeExplode
+To download a full playlist:
+
+```sh
+PlaylistDownloader "<Playlist URL>"
+```
+
+To download a complete MP4 version, add an extra argument:
+
+```sh
+YoutubeDownloader "<YouTube Video URL>" v
+```
+
+### Output Details
+
+- All downloaded files are saved in `~/Downloads/YoutubeDownloads`.
+- Files are initially downloaded as **WebM** and converted to **M4A**.
+- A JSON file containing metadata is also generated.
+
+### Notes
+
+- On **Linux**, you may need to manually create the `thumbnails` directory under the `json` directory.
+- If using **Linux**, surround URLs with double quotes (`"`) to avoid shell-related issues.
+
+## Building from Source
+
+1. Clone the repository (use the `dev` branch for the latest features, though it may contain bugs):
+   ```sh
+   git clone https://github.com/your-repo/YoutubeDownloaderCLI.git
+   ```
+2. Navigate to the directory containing the solution file (`.sln`).
+3. Run the following command to build the project:
+   ```sh
+   dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true -p:EnableTrim=true -o ./Release
+   ```
+   - For Linux, replace `win-x64` with `linux-x64`.
+4. The compiled executables will be available in the `./Release` folder.
+
+## Dependencies
+
+This project uses the following libraries:
+
+- **Newtonsoft.JSON** (for JSON handling)
+- **Cli.Wrap** (for executing external processes)
+- **YoutubeExplode** (for downloading videos)
+
+## Feedback & Contributions
+
+Your feedback is greatly appreciated! I am particularly interested in:
+
+- Preferred output formats
+- Whether WebM files should be deleted after conversion
+- Whether JSON metadata files should be deleted after processing
+- Whether converted files should be saved in the Music folder instead
+
+Pull requests are welcome! If you know of an API that provides better metadata retrieval based on title and author, please share it.

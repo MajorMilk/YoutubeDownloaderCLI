@@ -23,7 +23,7 @@ You can learn how to do this [here](https://stackoverflow.com/questions/44272416
 ## How do I use the new Spotify Metadata features?
 1. Clone the dev branch of this repo and build the code 
 2. Create an app on the spotify developers portal [here](https://developer.spotify.com)
-3. Run the Spotify binary at least once, it will generate a json file in the same dir as the binary with places for you to put your client id and client secret
+3. Run the Spotify binary at least once, it will generate a json file in the same dir as other downloaded jsons with places for you to put your client id and client secret
 4. After placing your client id and secret into that json, simply run the exe, and the program will try and scrape metadata for all your m4a files
 
 ## Usage
@@ -46,22 +46,36 @@ To download a complete MP4 version, add an extra argument:
 YoutubeDownloader "<YouTube Video URL>" v
 ```
 
+To find metadata for all of your m4a files:
+
+```sh
+SpotifyMetadataGenerator
+```
+
+To find metadata for only one of your m4a files:
+
+```sh
+SpotifyMetadataGenerator "<Path to File>"
+```
+
 ### Output Details
 
 - All downloaded files are saved in `~/Downloads/YoutubeDownloads`.
-- Files are initially downloaded as **WebM** and converted to **M4A**.
-- A JSON file containing metadata is also generated.
+- Files are initially downloaded as **WebM** and converted to **M4A**. (YouTube does not directly serve other formats)
+- A JSON file containing metadata is also generated. (You should prob leave it in place)
 
 ### Notes
 
 - On **Linux**, you may need to manually create the `thumbnails` directory under the `json` directory.
 - If using **Linux**, surround URLs with double quotes (`"`) to avoid shell-related issues.
+- Spotify integration will not work unless you create an app on the spotify dev portal. Old functions will work fine though.
+- This program heavily relies on files being in the right places, please keep your original m4a files and jsons in their saved locations.
 
 ## Building from Source
 
 1. Clone the repository (use the `dev` branch for the latest features, though it may contain bugs):
    ```sh
-   git clone https://github.com/your-repo/YoutubeDownloaderCLI.git
+   git clone https://github.com/MajorMilk/YoutubeDownloaderCLI
    ```
 2. Navigate to the directory containing the solution file (`.sln`).
 3. Run the following command to build the project:

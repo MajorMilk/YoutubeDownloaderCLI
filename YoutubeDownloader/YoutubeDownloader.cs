@@ -1,8 +1,11 @@
-﻿using YoutubeExplode;
+﻿using System.Reflection;
+using AngleSharp.Media.Dom;
+using YoutubeExplode;
 using Newtonsoft.Json;
 using YoutubeExplode.Videos;
 using YoutubeExplode.Videos.Streams;
 using CliWrap;
+using SpotifyAPI;
 
 internal class YoutubeDownloader
 {
@@ -157,6 +160,35 @@ internal class YoutubeDownloader
             }
 
             File.Move(audioFileName, Path.Combine(webmPath, $"{fname}.webm"));
+            
+            string configPath = Path.Combine(Path.Combine(Path.Combine(downloadsPath, "jsons")), "SpotifyAPICreds.json");
+            if (!File.Exists(configPath))
+            {
+                Console.WriteLine("All Done, but you need to add your Spotify API credentials to SpotifyAPICreds.json to use the Spotify integration.");
+                File.WriteAllText(configPath, JsonConvert.SerializeObject(APICredentials.Empty, Formatting.Indented));
+                return;
+            }
+            APICredentials creds = JsonConvert.DeserializeObject<APICredentials>(File.ReadAllText(configPath));
+            if (creds.ClientId == "YOUR_CLIENT_ID" || creds.ClientSecret == "YOUR_CLIENT_SECRET")
+            {
+                Console.WriteLine("All Done, but you need to add your Spotify API credentials to SpotifyAPICreds.json to use the Spotify integration.");
+                File.WriteAllText(configPath, JsonConvert.SerializeObject(APICredentials.Empty, Formatting.Indented));
+                return;
+            }
+
+            try
+            {
+                var res = await Cli.Wrap("SpotifyMetadataGrabber")
+                    .WithArguments($"\"{newFileName}\"")
+                    .WithStandardOutputPipe(PipeTarget.ToDelegate(Console.WriteLine))
+                    .WithStandardErrorPipe(PipeTarget.ToDelegate(Console.Error.WriteLine))
+                    .ExecuteAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
         catch (Exception ex)
         {
